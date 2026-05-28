@@ -1,0 +1,25 @@
+# Build output
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+publish/
+
+# IDE - Rider/JetBrains
+.idea/
+*.DotSettings.user
+*.suo
+*.user
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini

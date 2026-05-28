@@ -1,0 +1,525 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:FilePilot.App.ViewModels"
+        xmlns:loc="clr-namespace:FilePilot.App.Services;assembly=FilePilot.App"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+        x:Class="FilePilot.App.Views.MainWindow"
+        x:Name="MainWin"
+        x:DataType="vm:MainWindowViewModel"
+        Title="FilePilot"
+        Width="900" Height="600"
+        MinWidth="700" MinHeight="450"
+        Background="#E8F0F5FA"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="SF Pro Display, PingFang SC, Microsoft YaHei, Segoe UI, sans-serif">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Border CornerRadius="0" Margin="0">
+        <Border.Background>
+            <SolidColorBrush Color="#E8F0F5FA" />
+        </Border.Background>
+
+        <Grid RowDefinitions="Auto,*,Auto">
+            <!-- ===== Toolbar ===== -->
+            <Border Grid.Row="0" Padding="16,12" BorderBrush="#20000000" BorderThickness="0,0,0,1">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <TextBlock Grid.Column="0"
+                               Text="FilePilot"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Foreground="#1A1A1A"
+                               VerticalAlignment="Center" />
+
+                    <!-- Right: Mode buttons -->
+                    <StackPanel Grid.Column="2"
+                                Orientation="Horizontal"
+                                Spacing="8"
+                                VerticalAlignment="Center">
+                        <Button Command="{Binding SelectManualCommand}"
+                                FontSize="12"
+                                Padding="12,6"
+                                Background="#F3F4F6"
+                                Foreground="#374151"
+                                CornerRadius="6">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Border Width="8" Height="8" CornerRadius="4"
+                                        Background="{Binding ManualButtonBg}"
+                                        VerticalAlignment="Center" />
+                                <TextBlock Text="{x:Static loc:Loc.ManualMode}"
+                                           FontSize="12"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding SelectAutoCommand}"
+                                FontSize="12"
+                                Padding="12,6"
+                                Background="#F3F4F6"
+                                Foreground="#374151"
+                                CornerRadius="6">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <Border Width="8" Height="8" CornerRadius="4"
+                                        Background="{Binding AutoButtonBg}"
+                                        VerticalAlignment="Center" />
+                                <TextBlock Text="{x:Static loc:Loc.AutoMode}"
+                                           FontSize="12"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- ===== Main Content ===== -->
+            <Grid Grid.Row="1" ColumnDefinitions="1.2*,1*" Margin="16">
+                <!-- Left Panel: Rules -->
+                <Border Grid.Column="0" Margin="0,0,8,0"
+                        x:Name="LeftPanel"
+                        CornerRadius="8" Padding="16"
+                        Background="#B0FFFFFF">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto">
+                        <!-- Row 0: Title + organize button -->
+                        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,10">
+                            <TextBlock Grid.Column="0"
+                                       Text="{x:Static loc:Loc.RulePanelTitle}"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="#1A1A1A"
+                                       VerticalAlignment="Center" />
+                            <Button Grid.Column="2"
+                                    Content="{Binding OrganizeButtonText}"
+                                    Command="{Binding OrganizeCommand}"
+                                    IsEnabled="{Binding CanOrganize}"
+                                    FontSize="12"
+                                    Padding="10,6"
+                                    Background="#F3F4F6"
+                                    Foreground="#374151"
+                                    CornerRadius="6"
+                                    VerticalAlignment="Center" />
+                        </Grid>
+
+                        <!-- Row 1: Source folder -->
+                        <Grid Grid.Row="1"
+                              ColumnDefinitions="Auto,*,Auto"
+                              Margin="0,0,0,6">
+                            <TextBlock Grid.Column="0"
+                                       Text="{x:Static loc:Loc.SourceFolder}"
+                                       FontSize="12"
+                                       Foreground="#6B7280"
+                                       VerticalAlignment="Center"
+                                       Width="72" />
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding SourceFolderPath}"
+                                     IsReadOnly="True"
+                                     FontSize="11"
+                                     Padding="6,4"
+                                     Background="#F3F4F6"
+                                     CornerRadius="4" />
+                            <Button Grid.Column="2"
+                                    Content="{x:Static loc:Loc.Browse}"
+                                    Click="OnBrowseSourceFolder"
+                                    FontSize="11"
+                                    Padding="8,4"
+                                    Background="#F3F4F6"
+                                    Foreground="#374151"
+                                    CornerRadius="4"
+                                    Margin="8,0,0,0" />
+                        </Grid>
+
+                        <!-- Row 2: Destination folder -->
+                        <Grid Grid.Row="2"
+                              ColumnDefinitions="Auto,*,Auto"
+                              Margin="0,0,0,8">
+                            <TextBlock Grid.Column="0"
+                                       Text="{x:Static loc:Loc.DestinationFolder}"
+                                       FontSize="12"
+                                       Foreground="#6B7280"
+                                       VerticalAlignment="Center"
+                                       Width="72" />
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding DestinationFolderPath}"
+                                     IsReadOnly="True"
+                                     FontSize="11"
+                                     Padding="6,4"
+                                     Background="#F3F4F6"
+                                     CornerRadius="4" />
+                            <Button Grid.Column="2"
+                                    Content="{x:Static loc:Loc.Browse}"
+                                    Click="OnBrowseDestinationFolder"
+                                    FontSize="11"
+                                    Padding="8,4"
+                                    Background="#F3F4F6"
+                                    Foreground="#374151"
+                                    CornerRadius="4"
+                                    Margin="8,0,0,0" />
+                        </Grid>
+
+                        <!-- Row 3: Rules header -->
+                        <Grid Grid.Row="3"
+                              ColumnDefinitions="Auto,*,Auto,Auto"
+                              Margin="0,0,0,4">
+                            <TextBlock Grid.Column="0" Text="{x:Static loc:Loc.ExtensionHeader}" FontSize="11" Foreground="#9CA3AF" Width="64" TextAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{x:Static loc:Loc.TargetFolderHeader}" FontSize="11" Foreground="#9CA3AF" Margin="6,0,0,0" TextAlignment="Center" />
+                            <TextBlock Grid.Column="2" Text="{x:Static loc:Loc.EnableHeader}" FontSize="11" Foreground="#9CA3AF" Width="44" TextAlignment="Center" />
+                            <TextBlock Grid.Column="3" Text="" FontSize="11" Width="30" />
+                        </Grid>
+
+                        <!-- Row 4: Rules list -->
+                        <Grid Grid.Row="4">
+                            <!-- Empty state -->
+                            <Border IsVisible="{Binding HasNoRules}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Padding="24">
+                                <StackPanel Spacing="8" HorizontalAlignment="Center">
+                                    <TextBlock Text="{x:Static loc:Loc.NoRules}"
+                                               FontSize="14"
+                                               Foreground="#9CA3AF"
+                                               HorizontalAlignment="Center" />
+                                    <TextBlock Text="{x:Static loc:Loc.NoRulesHint}"
+                                               FontSize="12"
+                                               Foreground="#B0B7C3"
+                                               HorizontalAlignment="Center"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+                            <!-- Rules list -->
+                            <ScrollViewer IsVisible="{Binding !HasNoRules}">
+                                <ItemsControl ItemsSource="{Binding Rules}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Padding="6,4" Margin="0,2"
+                                                    CornerRadius="4"
+                                                    Background="Transparent">
+                                                <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                                                    <Border Padding="6,2" CornerRadius="4"
+                                                            Background="#DBEAFE" VerticalAlignment="Center"
+                                                            Width="64">
+                                                        <TextBlock Text="{Binding Extension}"
+                                                                   FontSize="12"
+                                                                   Foreground="#1E40AF"
+                                                                   VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <Border Grid.Column="1"
+                                                            Background="Transparent"
+                                                            CornerRadius="4"
+                                                            Margin="6,0,0,0"
+                                                            Padding="4,2"
+                                                            Cursor="Hand"
+                                                            Tag="{Binding .}"
+                                                            PointerPressed="OnEditTargetFolder">
+                                                        <TextBlock Text="{Binding TargetFolder}"
+                                                                   FontSize="12"
+                                                                   Foreground="#374151"
+                                                                   VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <ToggleSwitch Grid.Column="2"
+                                                                  IsChecked="{Binding Enabled}"
+                                                                  OffContent=""
+                                                                  OnContent=""
+                                                                  VerticalAlignment="Center"
+                                                                  Margin="4,0,4,0" />
+                                                    <Button Grid.Column="3"
+                                                            Content="✕"
+                                                            Tag="{Binding .}"
+                                                            Click="OnDeleteRule"
+                                                            FontSize="12"
+                                                            Width="26" Height="26"
+                                                            Padding="0"
+                                                            HorizontalContentAlignment="Center"
+                                                            VerticalContentAlignment="Center"
+                                                            Background="Transparent"
+                                                            Foreground="#1A1A1A"
+                                                            BorderThickness="0"
+                                                            CornerRadius="4"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+
+                        <!-- Row 5: Add rule form -->
+                        <Border Grid.Row="5" Margin="0,10,0,0"
+                                Padding="6,4" CornerRadius="6"
+                                Background="#F3F4F6">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <TextBox Grid.Column="0"
+                                         x:CompileBindings="False"
+                                         Text="{Binding NewExtension, UpdateSourceTrigger=LostFocus}"
+                                         Watermark="{x:Static loc:Loc.ExtWatermark}"
+                                         FontSize="12"
+                                         Width="64"
+                                         Padding="4,4"
+                                         Background="#80FFFFFF"
+                                         CornerRadius="4" />
+                                <TextBox Grid.Column="1"
+                                         x:CompileBindings="False"
+                                         Text="{Binding NewTargetFolder, UpdateSourceTrigger=LostFocus}"
+                                         Watermark="{x:Static loc:Loc.TargetFolderWatermark}"
+                                         FontSize="12"
+                                         Padding="4,4"
+                                         Background="#80FFFFFF"
+                                         CornerRadius="4"
+                                         Margin="6,0,0,0" />
+                                <Button Grid.Column="2"
+                                        Content="{x:Static loc:Loc.AddRule}"
+                                        Command="{Binding AddRuleCommand}"
+                                        FontSize="12"
+                                        Padding="10,4"
+                                        Background="#F3F4F6"
+                                        Foreground="#374151"
+                                        CornerRadius="4"
+                                        Margin="6,0,0,0" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Right Panel: Operation Log -->
+                <Border Grid.Column="1" Margin="8,0,0,0"
+                        CornerRadius="8" Padding="16"
+                        Background="#B0FFFFFF">
+                    <Grid RowDefinitions="Auto,*">
+                        <!-- Header row: title + undo buttons -->
+                        <Grid Grid.Row="0"
+                              ColumnDefinitions="Auto,*,Auto"
+                              Margin="0,0,0,12">
+                            <TextBlock Grid.Column="0"
+                                       Text="{x:Static loc:Loc.LogPanelTitle}"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Foreground="#1A1A1A"
+                                       VerticalAlignment="Center" />
+
+                            <!-- Single-undo buttons -->
+                            <StackPanel Grid.Column="2"
+                                        Orientation="Horizontal"
+                                        Spacing="8"
+                                        IsVisible="{Binding IsNotMultiUndoMode}">
+                                <Button Content="{x:Static loc:Loc.UndoLastLabel}"
+                                        Command="{Binding UndoLastCommand}"
+                                        FontSize="12"
+                                        Padding="10,6"
+                                        Background="#F3F4F6"
+                                        Foreground="#374151"
+                                        CornerRadius="6" />
+                                <Button Content="{x:Static loc:Loc.UndoMultipleLabel}"
+                                        Command="{Binding EnterMultiUndoModeCommand}"
+                                        FontSize="12"
+                                        Padding="10,6"
+                                        Background="#F3F4F6"
+                                        Foreground="#374151"
+                                        CornerRadius="6" />
+                            </StackPanel>
+
+                            <!-- Multi-undo buttons -->
+                            <StackPanel Grid.Column="2"
+                                        Orientation="Horizontal"
+                                        Spacing="8"
+                                        IsVisible="{Binding IsMultiUndoMode}">
+                                <Button Content="{x:Static loc:Loc.SelectAll}"
+                                        Command="{Binding SelectAllUndoableCommand}"
+                                        FontSize="12"
+                                        Padding="10,6"
+                                        Background="#F3F4F6"
+                                        Foreground="#374151"
+                                        CornerRadius="6" />
+                                <Button Content="{x:Static loc:Loc.UndoSelected}"
+                                        Command="{Binding ExecuteMultiUndoCommand}"
+                                        FontSize="12"
+                                        Padding="10,6"
+                                        Background="#EF4444"
+                                        Foreground="White"
+                                        CornerRadius="6" />
+                                <Button Content="{x:Static loc:Loc.Cancel}"
+                                        Command="{Binding CancelMultiUndoCommand}"
+                                        FontSize="12"
+                                        Padding="10,6"
+                                        Background="#F3F4F6"
+                                        Foreground="#374151"
+                                        CornerRadius="6" />
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Log entries -->
+                        <Grid Grid.Row="1">
+                            <!-- Empty state -->
+                            <Border IsVisible="{Binding HasNoLogs}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Padding="24">
+                                <StackPanel Spacing="8" HorizontalAlignment="Center">
+                                    <TextBlock Text="{x:Static loc:Loc.NoLogs}"
+                                               FontSize="14"
+                                               Foreground="#9CA3AF"
+                                               HorizontalAlignment="Center" />
+                                    <TextBlock Text="{x:Static loc:Loc.NoLogsHint}"
+                                               FontSize="12"
+                                               Foreground="#B0B7C3"
+                                               HorizontalAlignment="Center"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+                            <!-- Log list -->
+                            <ScrollViewer IsVisible="{Binding !HasNoLogs}">
+                                <ItemsControl ItemsSource="{Binding LogEntries}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Padding="8,6" Margin="0,2"
+                                                CornerRadius="4">
+                                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                                  RowDefinitions="Auto,Auto">
+                                                <!-- Status dot -->
+                                                <Border Width="6" Height="6"
+                                                        CornerRadius="3"
+                                                        Background="{Binding StatusColor}"
+                                                        VerticalAlignment="Center"
+                                                        Margin="0,0,8,0" />
+                                                <StackPanel Grid.Column="1">
+                                                    <TextBlock Text="{Binding DisplayText}"
+                                                               FontSize="13"
+                                                               Foreground="#1A1A1A" />
+                                                    <TextBlock Text="{Binding TimeDisplay}"
+                                                               FontSize="11"
+                                                               Foreground="#9CA3AF" />
+                                                </StackPanel>
+
+                                                <!-- Selection circle (visible only in multi-undo mode for undoable entries) -->
+                                                <Button Grid.Column="2"
+                                                        Tag="{Binding .}"
+                                                        Click="OnToggleUndoSelection"
+                                                        IsVisible="{Binding CanSelectForUndo}"
+                                                        Width="24" Height="24"
+                                                        Padding="0"
+                                                        Background="Transparent"
+                                                        BorderThickness="0"
+                                                        VerticalAlignment="Center">
+                                                    <Border Width="14" Height="14"
+                                                            CornerRadius="7"
+                                                            BorderBrush="{Binding SelectionCircleBorder}"
+                                                            BorderThickness="1.5"
+                                                            Background="{Binding SelectionCircleBg}" />
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ===== Status Bar ===== -->
+            <Border Grid.Row="2"
+                    Padding="16,8"
+                    BorderBrush="#20000000"
+                    BorderThickness="0,1,0,0">
+                <StackPanel Spacing="4">
+                    <ProgressBar IsVisible="{Binding IsOrganizing}"
+                                 IsIndeterminate="True"
+                                 Height="2"
+                                 Foreground="#3B82F6"
+                                 Background="Transparent" />
+                    <TextBlock Text="{Binding StatusText}"
+                               FontSize="12"
+                               Foreground="#9CA3AF"
+                               HorizontalAlignment="Center" />
+                </StackPanel>
+            </Border>
+
+            <!-- ===== Confirm Overlay ===== -->
+            <Border Grid.Row="0" Grid.RowSpan="3"
+                    IsVisible="{Binding IsConfirmVisible}"
+                    Background="#80000000"
+                    CornerRadius="0">
+                <Border Width="380" Height="140"
+                        CornerRadius="10"
+                        Background="White"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                    <StackPanel Spacing="16" Margin="24"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="{Binding ConfirmMessage}"
+                                   FontSize="14"
+                                   Foreground="#1A1A1A"
+                                   TextWrapping="Wrap"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Spacing="12">
+                            <Button Content="{x:Static loc:Loc.Confirm}"
+                                    Command="{Binding ConfirmCommand}"
+                                    Width="80"
+                                    Background="#3B82F6"
+                                    Foreground="White"
+                                    CornerRadius="6" />
+                            <Button Content="{x:Static loc:Loc.Cancel}"
+                                    Command="{Binding CancelConfirmCommand}"
+                                    Width="80"
+                                    Background="#F3F4F6"
+                                    Foreground="#374151"
+                                    CornerRadius="6" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Border>
+
+            <!-- ===== Edit Target Folder Overlay ===== -->
+            <Border Grid.Row="0" Grid.RowSpan="3"
+                    x:Name="EditOverlay"
+                    IsVisible="False"
+                    x:CompileBindings="False"
+                    Background="#80000000"
+                    CornerRadius="0">
+                <Border Width="380" Height="160"
+                        CornerRadius="10"
+                        Background="White"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                    <StackPanel Spacing="12" Margin="24"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="{x:Static loc:Loc.EditTargetFolderTitle}"
+                                   FontSize="14"
+                                   Foreground="#1A1A1A"
+                                   HorizontalAlignment="Center" />
+                        <TextBox x:Name="EditTargetFolderBox"
+                                 InputMethod.IsInputMethodEnabled="True"
+                                 FontSize="13"
+                                 Padding="8,6"
+                                 Background="#F3F4F6"
+                                 CornerRadius="4"
+                                 KeyDown="OnEditBoxKeyDown" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    Spacing="12">
+                            <Button Content="OK"
+                                    Click="OnEditOk"
+                                    Width="80"
+                                    Background="#3B82F6"
+                                    Foreground="White"
+                                    CornerRadius="6" />
+                            <Button Content="{x:Static loc:Loc.Cancel}"
+                                    Click="OnEditCancel"
+                                    Width="80"
+                                    Background="#F3F4F6"
+                                    Foreground="#374151"
+                                    CornerRadius="6" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Border>
+
+        </Grid>
+    </Border>
+</Window>
