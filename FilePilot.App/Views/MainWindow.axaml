@@ -118,6 +118,7 @@
                                      FontSize="11"
                                      Padding="6,4"
                                      Background="#F3F4F6"
+                                     Foreground="#1A1A1A"
                                      CornerRadius="4" />
                             <Button Grid.Column="2"
                                     Content="{x:Static loc:Loc.Browse}"
@@ -146,6 +147,7 @@
                                      FontSize="11"
                                      Padding="6,4"
                                      Background="#F3F4F6"
+                                     Foreground="#1A1A1A"
                                      CornerRadius="4" />
                             <Button Grid.Column="2"
                                     Content="{x:Static loc:Loc.Browse}"
@@ -221,6 +223,7 @@
                                                                   IsChecked="{Binding Enabled}"
                                                                   OffContent=""
                                                                   OnContent=""
+                                                                  MinWidth="44"
                                                                   VerticalAlignment="Center"
                                                                   Margin="4,0,4,0" />
                                                     <Button Grid.Column="3"
@@ -259,6 +262,7 @@
                                          Width="64"
                                          Padding="4,4"
                                          Background="#80FFFFFF"
+                                         Foreground="#1A1A1A"
                                          CornerRadius="4" />
                                 <TextBox Grid.Column="1"
                                          x:CompileBindings="False"
@@ -267,6 +271,7 @@
                                          FontSize="12"
                                          Padding="4,4"
                                          Background="#80FFFFFF"
+                                         Foreground="#1A1A1A"
                                          CornerRadius="4"
                                          Margin="6,0,0,0" />
                                 <Button Grid.Column="2"
@@ -498,12 +503,13 @@
                                  FontSize="13"
                                  Padding="8,6"
                                  Background="#F3F4F6"
+                                 Foreground="#1A1A1A"
                                  CornerRadius="4"
                                  KeyDown="OnEditBoxKeyDown" />
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center"
                                     Spacing="12">
-                            <Button Content="OK"
+                            <Button Content="{x:Static loc:Loc.OkButton}"
                                     Click="OnEditOk"
                                     Width="80"
                                     Background="#3B82F6"

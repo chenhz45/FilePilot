@@ -51,6 +51,9 @@ public static class Loc
         ? "执行归类后，操作记录将显示在这里"
         : "Operation records will appear here after organizing";
 
+    // ── Edit Overlay ──
+    public static string OkButton => IsZh ? "确定" : "OK";
+
     // ── Confirm Dialog ──
     public static string Confirm => IsZh ? "同意" : "Confirm";
     public static string AutoModeConfirmMsg => IsZh
